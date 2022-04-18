@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,8 +9,10 @@ public class Spawner : MonoBehaviour
 {
     [SerializeField] public GameController gameController;
     [SerializeField] public GameObject spawnObject;
-    [SerializeField]public float spawnTime = 3f;
+    [SerializeField] public float spawnTime = 3f;
     [SerializeField] public float spawnRange = 10f;
+
+    [SerializeField] public float minSpawnDistance = 1.5f;
     public bool isPaused = false;
 
     private float timer;
@@ -30,23 +33,33 @@ public class Spawner : MonoBehaviour
     {
         timer += Time.deltaTime;
         if (timer >= spawnTime)
-        {
-            timer = 0;
-            Spawn();
-        }
+            PrepareSpawn();
     }
 
     private void FixedUpdate()
     {
-        if (isPaused || isSpawnPrepared) return;
-        var x = Random.value * spawnRange - spawnRange/2;
-        var z = Random.value * spawnRange - spawnRange/2;
-        var y = 90f;
-        
-        Vector3 rayStartPos = new Vector3(x,y,z);
-        
+        if (isPaused) return;
+
+        if (isSpawnPrepared)
+            Spawn();
+    }
+
+    void PrepareSpawn()
+    {
         RaycastHit hit;
-        if (Physics.Raycast(rayStartPos, Vector3.down, out hit,100))
+        var randomOffset = Random.value * spawnRange * 2 - spawnRange;
+        var playerPosition = gameController.playerGO.transform.position;
+        var playerRotation = gameController.playerGO.transform.rotation;
+        var rayStartPosition = playerPosition + playerRotation * Vector3.back * minSpawnDistance;
+        var rayEndPosition = rayStartPosition + playerRotation * Vector3.back * spawnRange /2 + Vector3.right * randomOffset;
+        var rayDirection = rayEndPosition - rayStartPosition;
+
+#if UNITY_EDITOR
+        
+        Debug.DrawLine(rayStartPosition, rayEndPosition, Color.yellow, 1f);
+#endif
+
+        if (Physics.Raycast(rayStartPosition, rayDirection, out hit, spawnRange))
         {
             isSpawnPrepared = true;
             spawnPosition = hit.point + Vector3.up * 0.1f;
@@ -58,6 +71,7 @@ public class Spawner : MonoBehaviour
         Vector3 rotationVector = gameController.playerGO.transform.position - spawnPosition;
         Quaternion spawnRotation = Quaternion.LookRotation(rotationVector, Vector3.up);
         var newEnemy = Instantiate(spawnObject, spawnPosition, spawnRotation);
+        timer = 0;
         isSpawnPrepared = false;
     }
 }
