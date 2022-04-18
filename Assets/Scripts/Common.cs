@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -18,6 +19,11 @@ public static class GameData
 
 public static class Extensions
 {
+    public static T GetComponentOrNull<T>(this GameObject gameObject) where  T : Component
+    {
+        return gameObject.IsComponentExist<T>() ? gameObject.GetComponent<T>() : null;
+
+    } 
     public static void CheckExisting<T>(this GameObject gameObject) where  T : Component
     {
         if (!gameObject.IsComponentExist<T>())
