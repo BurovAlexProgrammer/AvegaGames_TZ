@@ -10,14 +10,14 @@ public class Shell : MonoBehaviour
     public float initialSpeed = 100;
     public float lifeTime = 5;
 
-    private Rigidbody rigidbody;
+    private Rigidbody thisRigidbody;
     private bool isLive = true;
 
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        thisRigidbody = GetComponent<Rigidbody>();
         Live();
-        rigidbody.velocity = transform.rotation * Vector3.forward * initialSpeed;
+        thisRigidbody.velocity = transform.rotation * Vector3.forward * initialSpeed;
     }
 
     async void Live()

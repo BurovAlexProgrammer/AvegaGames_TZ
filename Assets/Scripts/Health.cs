@@ -7,25 +7,27 @@ public class Health : MonoBehaviour
 {
     public int initialHealth = 100;
     public Destrictable destrictable;
-
-    private float health;
+    public int HealthValue { get; private set; }
 
     private void Start()
     {
-        health = initialHealth;
+        HealthValue = initialHealth;
         destrictable = gameObject.GetComponentOrNull<Destrictable>();
     }
 
     public void TakeDamage(int damage)
     {
-        health -= damage;
-        if (health <= 0)
+        HealthValue -= damage;
+        if (HealthValue <= 0)
         {
-            if (destrictable is null)
-                Destroy(gameObject);
-            else 
+            if (destrictable != null)
                 destrictable.RunDestruction();
         }
     }
-    
+
+    public void Restore()
+    {
+        HealthValue = initialHealth;
+    }
+
 }
