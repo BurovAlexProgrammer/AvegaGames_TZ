@@ -63,6 +63,10 @@ public class GameController : MonoBehaviour
         playerGO.transform.SetPositionAndRotation(initialPlayerPosition, Quaternion.identity);
         playerGO.GetComponent<FP_CameraLook>().PlayerHead.rotation = Quaternion.identity;
         playerHealth.Restore();
+        foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            Destroy(enemy);
+        }
         Start();
     }
 }

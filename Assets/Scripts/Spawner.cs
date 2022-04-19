@@ -80,7 +80,7 @@ public class Spawner : MonoBehaviour
         if (NavMesh.SamplePosition(spawnPosition + spawnRotation * Vector3.forward, out closestHit, 10, NavMesh.AllAreas))
         {
             newEnemy.transform.position = closestHit.position;
-            //newEnemy.AddComponent<NavMeshAgent>();
+            newEnemy.tag = "Enemy";
             timer = 0;
             isSpawnPrepared = false;
         }
