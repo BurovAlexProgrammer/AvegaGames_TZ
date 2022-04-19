@@ -4,16 +4,22 @@ using UnityEngine;
 
 public class Destrictable : MonoBehaviour
 {
-    public AnimationClip animationClip;
-    public bool canBeDestroyed = false;
+    [SerializeField] public GameObject distructPerfab;
+    //private bool mustBeDestroyed = false;
 
-    void Destroy()
+    public void Distruct()
     {
-        GameObject.Destroy(gameObject);
+        DestructProcess();
     }
 
-    public void RunDestruction()
+    void DestructProcess()
     {
-        
+        if (distructPerfab != null)
+        {
+            var distructGO = Instantiate(distructPerfab, transform.position, transform.rotation, transform.parent);
+            distructGO.transform.localScale = distructPerfab.transform.localScale;
+        }
+
+        Destroy(gameObject);
     }
 }

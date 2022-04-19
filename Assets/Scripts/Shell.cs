@@ -7,8 +7,9 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Shell : MonoBehaviour
 {
-    public float initialSpeed = 100;
-    public float lifeTime = 5;
+    [SerializeField] public float initialSpeed = 100;
+    [SerializeField] public float lifeTime = 5;
+    [SerializeField] public int damage = 50;
 
     private Rigidbody thisRigidbody;
     private bool isLive = true;
@@ -42,7 +43,12 @@ public class Shell : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            other.gameObject.SendMessage("TakeDamage", SendMessageOptions.RequireReceiver);
+            var enemyHealth = other.gameObject.GetComponentOrNull<Health>();
+
+            if (enemyHealth != null)
+                enemyHealth.TakeDamage(damage);
+            else
+                throw new Exception("Health component does not contains on Enemy game object.");
         }
 
         Destroy();

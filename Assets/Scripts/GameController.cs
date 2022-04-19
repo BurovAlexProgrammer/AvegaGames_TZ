@@ -7,6 +7,8 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     [SerializeField] public GameObject playerGO;
+    [SerializeField] public bool isPlayMusic;
+    [SerializeField] public GameObject musicPlayer;
 
     public int playerHealthValue => playerHealth.HealthValue;
     public bool IsGameOver => isGameOver;
@@ -23,6 +25,7 @@ public class GameController : MonoBehaviour
         scores = new int[colorLength];
         initialPlayerPosition = playerGO.transform.position;
         playerHealth = playerGO.GetComponentOrNull<Health>();
+        musicPlayer.SetActive(isPlayMusic);
     }
 
     public int GetScores(GameData.ShellColors color)
@@ -67,6 +70,7 @@ public class GameController : MonoBehaviour
         {
             Destroy(enemy);
         }
+
         Start();
     }
 }

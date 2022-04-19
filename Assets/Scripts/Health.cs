@@ -21,7 +21,7 @@ public class Health : MonoBehaviour
         if (HealthValue <= 0)
         {
             if (destrictable != null)
-                destrictable.RunDestruction();
+                destrictable.Distruct();
         }
     }
 
