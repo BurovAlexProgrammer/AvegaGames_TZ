@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour
@@ -51,18 +52,19 @@ public class Spawner : MonoBehaviour
         var playerPosition = gameController.playerGO.transform.position;
         var playerRotation = gameController.playerGO.transform.rotation;
         var rayStartPosition = playerPosition + playerRotation * Vector3.back * minSpawnDistance;
-        var rayEndPosition = rayStartPosition + playerRotation * Vector3.back * spawnRange /2 + Vector3.right * randomOffset;
+        var rayEndPosition = rayStartPosition + playerRotation * Vector3.back * spawnRange / 2 +
+                             Vector3.right * randomOffset;
         var rayDirection = rayEndPosition - rayStartPosition;
 
 #if UNITY_EDITOR
-        
+
         Debug.DrawLine(rayStartPosition, rayEndPosition, Color.yellow, 1f);
 #endif
 
         if (Physics.Raycast(rayStartPosition, rayDirection, out hit, spawnRange))
         {
             isSpawnPrepared = true;
-            spawnPosition = hit.point + Vector3.up * 0.1f;
+            spawnPosition = hit.point + Vector3.up * -0.5f;
         }
     }
 
@@ -70,8 +72,17 @@ public class Spawner : MonoBehaviour
     {
         Vector3 rotationVector = gameController.playerGO.transform.position - spawnPosition;
         Quaternion spawnRotation = Quaternion.LookRotation(rotationVector, Vector3.up);
-        var newEnemy = Instantiate(spawnObject, spawnPosition, spawnRotation);
-        timer = 0;
-        isSpawnPrepared = false;
+        var newEnemy = Instantiate(spawnObject, spawnPosition + spawnRotation * Vector3.forward, spawnRotation);
+        newEnemy.GetComponent<Enemy>().target = gameController.playerGO;
+
+        NavMeshHit closestHit;
+        
+        if (NavMesh.SamplePosition(spawnPosition + spawnRotation * Vector3.forward, out closestHit, 10, NavMesh.AllAreas))
+        {
+            newEnemy.transform.position = closestHit.position;
+            //newEnemy.AddComponent<NavMeshAgent>();
+            timer = 0;
+            isSpawnPrepared = false;
+        }
     }
 }
