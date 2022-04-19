@@ -14,7 +14,7 @@ public class Shooting : MonoBehaviour
     public int ammoCount = 9999999;
 
     public GameObject shellPrefab;
-    public Material[] shellMaterials;
+    public GameColors colorColors;
     
     private int ammo;
     private float delay;
@@ -29,8 +29,6 @@ public class Shooting : MonoBehaviour
             shell = shellPrefab.GetComponent<Shell>();
         else 
             throw new NullReferenceException("Shell component is missing on ShellPrefab.");
-        if (shellMaterials.Length < Enum.GetNames(typeof(GameData.ShellColors)).Length)
-             throw new ArgumentException("Not enough color materials on Shooting script");
     }
 
     void Update()

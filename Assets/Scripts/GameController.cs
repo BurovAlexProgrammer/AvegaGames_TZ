@@ -68,7 +68,7 @@ public class GameController : MonoBehaviour
         playerHealth.Restore();
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
         {
-            Destroy(enemy);
+            DestroyImmediate(enemy);
         }
 
         Start();
