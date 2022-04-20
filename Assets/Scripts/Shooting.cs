@@ -14,8 +14,7 @@ public class Shooting : MonoBehaviour
     public int ammoCount = 9999999;
 
     public GameObject shellPrefab;
-    public GameColors colorColors;
-    
+
     private int ammo;
     private float delay;
     private bool reloading;
@@ -73,6 +72,6 @@ public class Shooting : MonoBehaviour
     void Shoot()
     {
         var newShell = Instantiate(shellPrefab, transform.position, transform.rotation);
-        //TODO add color material to shell
+        newShell.GetComponentOrNull<MeshRenderer>().material =  GameController.Instance.LastColor.material;
     }
 }

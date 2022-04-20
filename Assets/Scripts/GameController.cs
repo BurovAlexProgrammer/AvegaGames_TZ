@@ -30,11 +30,7 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
-        if (_instance == null)
-        {
-            _instance = this;
-            DontDestroyOnLoad(_instance);
-        }
+        if (_instance == null) _instance = this;
         else throw new Exception("GameController Instance is defined already.");
         lastColor = gameColors.colors[0];
         InitialScores();
