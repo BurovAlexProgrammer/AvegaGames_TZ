@@ -15,7 +15,7 @@ public class ColorBox : MonoBehaviour
     {
         currentColor = gameColors.GetRandom();
         gameObject.GetComponentOrNull<MeshRenderer>().material = currentColor.material;
-        if (gameObject.GetComponentOrNull<Collider>() == null) 
+        if (gameObject.GetComponentOrNull<Collider>() == null)
             throw new NullReferenceException();
     }
 
@@ -23,7 +23,7 @@ public class ColorBox : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            GameController.Instance.AddScores(currentColor.name, 1);
+            GameController.Instance.AddScores(currentColor, 1);
             Destroy(gameObject);
         }
     }

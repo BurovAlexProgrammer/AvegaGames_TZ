@@ -11,7 +11,7 @@ public class GameColors : ScriptableObject
 
     public GameColor GetRandom()
     {
-        var colorIndex = Random.Range(0, colors.Length - 1);
+        var colorIndex = Random.Range(0, colors.Length);
         return colors[colorIndex];
     }
 }

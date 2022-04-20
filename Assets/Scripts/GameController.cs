@@ -7,33 +7,37 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    private static GameController _instance;
+    public static GameController Instance => _instance;
+    
     [SerializeField] public GameObject playerGO;
     [SerializeField] public bool isPlayMusic;
     [SerializeField] public GameObject musicPlayer;
     [SerializeField] public GameColors gameColors;
 
+    public GameColor LastColor => lastColor;
+    private GameColor lastColor;
+    
     private static Dictionary<string, int> Scores = new Dictionary<string, int>();
 
-    private static GameController _instance;
-    public static GameController Instance => _instance;
 
     public int playerHealthValue => playerHealth.HealthValue;
     public bool IsGameOver => isGameOver;
 
     private Health playerHealth;
-    private int[] scores;
     private bool isGameOver = false;
     private Vector3 initialPlayerPosition;
 
     private void Awake()
     {
-        if (_instance == null) _instance = this;
-        else throw new Exception("GameController Instance is defined already.");
-
-        foreach (var color in gameColors.colors)
+        if (_instance == null)
         {
-            Scores.Add(color.name, 0);
+            _instance = this;
+            DontDestroyOnLoad(_instance);
         }
+        else throw new Exception("GameController Instance is defined already.");
+        lastColor = gameColors.colors[0];
+        InitialScores();
     }
 
     void Start()
@@ -76,6 +80,7 @@ public class GameController : MonoBehaviour
         playerGO.transform.SetPositionAndRotation(initialPlayerPosition, Quaternion.identity);
         playerGO.GetComponent<FP_CameraLook>().PlayerHead.rotation = Quaternion.identity;
         playerHealth.Restore();
+        InitialScores();
 
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
         {
@@ -90,13 +95,23 @@ public class GameController : MonoBehaviour
         Start();
     }
 
-    public void AddScores(string colorName, int value)
+    public void AddScores(GameColor color, int value)
     {
-        Scores[colorName] = value;
+        lastColor = color;
+        Scores[color.name] += value;
     }
 
     public int GetScores(string colorName)
     {
         return Scores[colorName];
+    }
+
+    public void InitialScores()
+    {
+        Scores.Clear();
+        foreach (var color in gameColors.colors)
+        {
+            Scores.Add(color.name, 0);
+        }
     }
 }

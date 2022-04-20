@@ -1,21 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
-
-public static class GameData
-{
-    public enum ShellColors
-    {
-        red, yellow, green
-    }
-}
 
 public static class Extensions
 {
