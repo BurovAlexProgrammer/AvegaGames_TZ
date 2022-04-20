@@ -7,12 +7,12 @@ using Random = UnityEngine.Random;
 [CreateAssetMenu(menuName = "Custom/GameColors")]
 public class GameColors : ScriptableObject
 {
-    [SerializeField] public GameColor[] materials;
+    [SerializeField] public GameColor[] colors;
 
     public GameColor GetRandom()
     {
-        var colorIndex = Random.Range(0, materials.Length - 1);
-        return materials[colorIndex];
+        var colorIndex = Random.Range(0, colors.Length - 1);
+        return colors[colorIndex];
     }
 }
 

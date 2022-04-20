@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -9,6 +10,12 @@ public class GameController : MonoBehaviour
     [SerializeField] public GameObject playerGO;
     [SerializeField] public bool isPlayMusic;
     [SerializeField] public GameObject musicPlayer;
+    [SerializeField] public GameColors gameColors;
+
+    private static Dictionary<string, int> Scores = new Dictionary<string, int>();
+
+    private static GameController _instance;
+    public static GameController Instance => _instance;
 
     public int playerHealthValue => playerHealth.HealthValue;
     public bool IsGameOver => isGameOver;
@@ -18,19 +25,22 @@ public class GameController : MonoBehaviour
     private bool isGameOver = false;
     private Vector3 initialPlayerPosition;
 
+    private void Awake()
+    {
+        if (_instance == null) _instance = this;
+        else throw new Exception("GameController Instance is defined already.");
+
+        foreach (var color in gameColors.colors)
+        {
+            Scores.Add(color.name, 0);
+        }
+    }
 
     void Start()
     {
-        var colorLength = Enum.GetNames(typeof(GameData.ShellColors)).Length;
-        scores = new int[colorLength];
         initialPlayerPosition = playerGO.transform.position;
         playerHealth = playerGO.GetComponentOrNull<Health>();
         musicPlayer.SetActive(isPlayMusic);
-    }
-
-    public int GetScores(GameData.ShellColors color)
-    {
-        return scores[(int) color];
     }
 
     private void Update()
@@ -66,11 +76,27 @@ public class GameController : MonoBehaviour
         playerGO.transform.SetPositionAndRotation(initialPlayerPosition, Quaternion.identity);
         playerGO.GetComponent<FP_CameraLook>().PlayerHead.rotation = Quaternion.identity;
         playerHealth.Restore();
+
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
         {
             DestroyImmediate(enemy);
         }
 
+        foreach (var item in GameObject.FindGameObjectsWithTag("CollectItem"))
+        {
+            DestroyImmediate(item);
+        }
+
         Start();
+    }
+
+    public void AddScores(string colorName, int value)
+    {
+        Scores[colorName] = value;
+    }
+
+    public int GetScores(string colorName)
+    {
+        return Scores[colorName];
     }
 }

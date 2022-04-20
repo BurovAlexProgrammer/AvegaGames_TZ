@@ -6,24 +6,25 @@ using UnityEngine.Events;
 
 public class GuiController : MonoBehaviour
 {
-    [SerializeField] public GameController gameController;
     [SerializeField] public TextMeshProUGUI health;
     [SerializeField] public TextMeshProUGUI redScores;
     [SerializeField] public TextMeshProUGUI yellowScores;
     [SerializeField] public TextMeshProUGUI greenScores;
     [SerializeField] public TextMeshProUGUI gameOver;
+
+    private GameColor[] colors;
     void Start()
     {
-        
+        colors = GameController.Instance.gameColors.colors;
     }
     
     void Update()
     {
-        health.text = $"HP: {gameController.playerHealthValue.ToString()}";
-        redScores.text = gameController.GetScores(GameData.ShellColors.red).ToString();
-        yellowScores.text = gameController.GetScores(GameData.ShellColors.yellow).ToString();
-        greenScores.text = gameController.GetScores(GameData.ShellColors.green).ToString();
-        gameOver.gameObject.SetActive(gameController.IsGameOver);
+        health.text = $"HP: {GameController.Instance.playerHealthValue.ToString()}";
+        redScores.text = GameController.Instance.GetScores(colors[0].name).ToString();
+        yellowScores.text = GameController.Instance.GetScores(colors[1].name).ToString();
+        greenScores.text = GameController.Instance.GetScores(colors[2].name).ToString();
+        gameOver.gameObject.SetActive(GameController.Instance.IsGameOver);
     }
     
     

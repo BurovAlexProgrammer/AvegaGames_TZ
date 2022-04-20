@@ -14,6 +14,11 @@ public class Shell : MonoBehaviour
     private Rigidbody thisRigidbody;
     private bool isLive = true;
 
+    private void OnApplicationQuit()
+    {
+        DestroyImmediate(this);
+    }
+    
     void Start()
     {
         thisRigidbody = GetComponent<Rigidbody>();
@@ -35,6 +40,7 @@ public class Shell : MonoBehaviour
 
     void Destroy()
     {
+        if (this == null) return;
         isLive = false;
         Destroy(gameObject);
     }
