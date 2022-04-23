@@ -23,7 +23,7 @@ public class DestroyAfterPlay : MonoBehaviour
     {
         if (isPlaying)
         {
-            if (!audioEvent.audioSource.isPlaying) Destroy(gameObject);
+            if (!audioSource.isPlaying) Destroy(gameObject);
             return;
         }
 

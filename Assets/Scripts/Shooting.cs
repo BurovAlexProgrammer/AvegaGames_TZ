@@ -37,8 +37,8 @@ public class Shooting : MonoBehaviour
         else
         {
             if (!playerInput.Shoot()) return; //IF SHOOT BUTTON IS PRESSED (Replace your mouse input)
-            Shoot();
             timer = shootRate;
+            Shoot();
         }
 
         // if (playerInput.Reload()) //IF RELOAD BUTTON WAS PRESSED (Replace your keyboard input)
@@ -60,6 +60,8 @@ public class Shooting : MonoBehaviour
     void Shoot()
     {
         var newShell = Instantiate(shellPrefab, transform.position, transform.rotation);
-        newShell.GetComponentOrNull<MeshRenderer>().material = GameController.Instance.LastColor.material;
+        var meshRenderer = newShell.GetComponentOrNull<MeshRenderer>();
+        if (meshRenderer == null) return;
+        meshRenderer.material = GameController.Instance.LastColor.material;
     }
 }

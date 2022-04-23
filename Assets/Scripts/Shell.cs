@@ -3,23 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Shell : MonoBehaviour
 {
-    [SerializeField] public float initialSpeed = 100;
+    [SerializeField] public float initialSpeed = 50;
     [SerializeField] public float lifeTime = 5;
     [SerializeField] public int damage = 50;
     [SerializeField] public AudioEvent shootAudioEvent;
+    [SerializeField] public GameObject shellDestroyedPrefab;
+
 
     private Rigidbody thisRigidbody;
     private bool isLive = true;
+
 
     private void OnApplicationQuit()
     {
         DestroyImmediate(this);
     }
-    
+
     void Start()
     {
         gameObject.CreateAudioEvent(shootAudioEvent);
@@ -44,6 +48,13 @@ public class Shell : MonoBehaviour
     {
         if (this == null) return;
         isLive = false;
+        var destroyedGo = Instantiate(shellDestroyedPrefab);
+        destroyedGo.transform.position = transform.position;
+        destroyedGo.transform.rotation = transform.rotation;
+        destroyedGo.transform.localScale = transform.localScale;
+        var shellDestroyed = destroyedGo.GetComponentOrNull<ShellDestroyed>();
+        shellDestroyed.velocity = thisRigidbody.velocity;
+        shellDestroyed.material = GetComponent<MeshRenderer>().material;
         Destroy(gameObject);
     }
 
@@ -53,10 +64,8 @@ public class Shell : MonoBehaviour
         {
             var enemyHealth = other.gameObject.GetComponentOrNull<Health>();
 
-            if (enemyHealth != null)
-                enemyHealth.TakeDamage(damage);
-            else
-                throw new Exception("Health component does not contains on Enemy game object.");
+            if (enemyHealth != null) enemyHealth.TakeDamage(damage);
+            else throw new Exception("Health component does not contains on Enemy game object.");
         }
 
         Destroy();
