@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,7 +12,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] public float attackRange = 1.5f;
     [SerializeField] public int attackDamage = 5;
     [SerializeField] public float attackDelay = 1f;
-    [SerializeField] public AnimationClip animationClip;
+    [SerializeField] public Animator animator;
+    [SerializeField] public NavMeshAgent navAgent;
 
     private NavMeshAgent agent;
     private Health targetHealth;
@@ -19,6 +22,7 @@ public class Enemy : MonoBehaviour
     private float updateTimer;
     private bool isReadyToAttack;
     private float attackTimer;
+    private float enemySpeed;
 
     void Start()
     {
@@ -26,8 +30,14 @@ public class Enemy : MonoBehaviour
         targetHealth = target.GetComponentOrNull<Health>();
     }
 
+    private void FixedUpdate()
+    {
+        enemySpeed = agent.velocity.magnitude / agent.speed;
+    }
+
     void Update()
     {
+        animator.SetFloat("Speed", enemySpeed);
         updateTimer += Time.deltaTime;
         if (updateTimer >= updateTime)
         {
@@ -57,9 +67,12 @@ public class Enemy : MonoBehaviour
         agent.SetDestination(target.transform.position);
     }
 
-    void Attack()
+    async void Attack()
     {
         Debug.Log("Attack");
+        animator.SetTrigger("Attack");
+        Debug.Log("IsTransiction: "+animator.IsInTransition(0));
+
         targetHealth.TakeDamage(attackDamage);
         isReadyToAttack = false;
     }
