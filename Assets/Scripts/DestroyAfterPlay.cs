@@ -40,11 +40,11 @@ public class DestroyAfterPlay : MonoBehaviour
 
     async void DestroyOnPlayEnd()
     {
-        while (this != null && audioSource != null && audioEvent.audioSource.isPlaying)
+        while (audioEvent.audioSource.isPlaying)
         {
             await Task.Yield();
         }
 
-        if (this != null) Destroy(this);
+        if (gameObject != null) Destroy(gameObject);
     }
 }

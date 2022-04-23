@@ -10,6 +10,7 @@ public class Shell : MonoBehaviour
     [SerializeField] public float initialSpeed = 100;
     [SerializeField] public float lifeTime = 5;
     [SerializeField] public int damage = 50;
+    [SerializeField] public AudioEvent shootAudioEvent;
 
     private Rigidbody thisRigidbody;
     private bool isLive = true;
@@ -21,6 +22,7 @@ public class Shell : MonoBehaviour
     
     void Start()
     {
+        gameObject.CreateAudioEvent(shootAudioEvent);
         thisRigidbody = GetComponent<Rigidbody>();
         Live();
         thisRigidbody.velocity = transform.rotation * Vector3.forward * initialSpeed;
