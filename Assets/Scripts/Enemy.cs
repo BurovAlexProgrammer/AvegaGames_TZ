@@ -19,6 +19,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] public NavMeshAgent navAgent;
     [SerializeField] public SimpleAudioEvent attackAudioEvent;
     [SerializeField] public SimpleAudioEvent breatheAudioEvent;
+    [SerializeField] public SimpleAudioEvent deathAudioEvent;
+    
 
     private NavMeshAgent agent;
     private Health targetHealth;
@@ -34,6 +36,11 @@ public class Enemy : MonoBehaviour
         agent = gameObject.GetComponentOrNull<NavMeshAgent>();
         targetHealth = target.GetComponentOrNull<Health>();
         PlayBreatheSound();
+    }
+
+    private void OnDestroy()
+    {
+        gameObject.CreateAudioEvent(deathAudioEvent);
     }
 
     private void FixedUpdate()

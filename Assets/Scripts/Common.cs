@@ -9,7 +9,19 @@ public static class Extensions
         bool isIndependent = true)
     {
         var newAudioEvent = new GameObject("AudioEvent");
-        newAudioEvent.transform.SetParent(isIndependent ? gameObject.transform.parent : gameObject.transform);
+
+        if (isIndependent)
+        {
+            if (gameObject.transform.parent != null) //if parent is root
+                newAudioEvent.transform.position = gameObject.transform.position;
+            else
+                newAudioEvent.transform.SetParent(gameObject.transform.parent);
+        }
+        else
+        {
+            newAudioEvent.transform.SetParent(gameObject.transform);
+        }
+
         var autoDestroy = newAudioEvent.AddComponent<DestroyAfterPlay>();
         autoDestroy.audioEvent = audioEvent;
         return newAudioEvent;

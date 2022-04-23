@@ -9,15 +9,16 @@ public class GameController : MonoBehaviour
 {
     private static GameController _instance;
     public static GameController Instance => _instance;
-    
+
     [SerializeField] public GameObject playerGO;
     [SerializeField] public bool isPlayMusic;
     [SerializeField] public GameObject musicPlayer;
     [SerializeField] public GameColors gameColors;
+    [SerializeField] public AudioEvent startGameAudio;
 
     public GameColor LastColor => lastColor;
     private GameColor lastColor;
-    
+
     private static Dictionary<string, int> Scores = new Dictionary<string, int>();
 
 
@@ -40,16 +41,14 @@ public class GameController : MonoBehaviour
     {
         initialPlayerPosition = playerGO.transform.position;
         playerHealth = playerGO.GetComponentOrNull<Health>();
-        musicPlayer.SetActive(isPlayMusic);
+        gameObject.CreateAudioEvent(startGameAudio);
     }
 
     private void Update()
     {
         if (!isGameOver & playerHealth.HealthValue <= 0)
             GameOver();
-        //temp
-        // if (Input.anyKeyDown)
-        //     playerHealth.TakeDamage(30);
+        musicPlayer.SetActive(isPlayMusic);
     }
 
     private async void GameOver()

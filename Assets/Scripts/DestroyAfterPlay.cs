@@ -17,6 +17,7 @@ public class DestroyAfterPlay : MonoBehaviour
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        if (audioEvent == null) throw new NullReferenceException();
     }
 
     void Update()
