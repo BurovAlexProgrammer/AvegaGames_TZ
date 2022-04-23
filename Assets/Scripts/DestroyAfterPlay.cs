@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -20,6 +21,8 @@ public class DestroyAfterPlay : MonoBehaviour
 
     void Update()
     {
+        if (isReadyToPlay) return;
+        
         if (timer < startDelay)
         {
             timer += Time.deltaTime;
@@ -29,9 +32,18 @@ public class DestroyAfterPlay : MonoBehaviour
         if (!isReadyToPlay)
         {
             audioEvent.Play(audioSource);
+            DestroyOnPlayEnd();
         }
         
         isReadyToPlay = true;
     }
-    
+
+    async void DestroyOnPlayEnd()
+    {
+        while (audioEvent.audioSource.isPlaying)
+        {
+            await Task.Yield();
+        }
+        Destroy(gameObject);
+    } 
 }

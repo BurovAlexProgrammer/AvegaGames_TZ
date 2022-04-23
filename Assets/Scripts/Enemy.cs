@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : MonoBehaviour
@@ -12,8 +14,11 @@ public class Enemy : MonoBehaviour
     [SerializeField] public float attackRange = 1.5f;
     [SerializeField] public int attackDamage = 5;
     [SerializeField] public float attackDelay = 1f;
+    [SerializeField] [Range(0f, 1f)] public float playBreatheChance = 0.5f;
     [SerializeField] public Animator animator;
     [SerializeField] public NavMeshAgent navAgent;
+    [SerializeField] public SimpleAudioEvent attackAudioEvent;
+    [SerializeField] public SimpleAudioEvent breatheAudioEvent;
 
     private NavMeshAgent agent;
     private Health targetHealth;
@@ -28,6 +33,7 @@ public class Enemy : MonoBehaviour
     {
         agent = gameObject.GetComponentOrNull<NavMeshAgent>();
         targetHealth = target.GetComponentOrNull<Health>();
+        PlayBreatheSound();
     }
 
     private void FixedUpdate()
@@ -58,7 +64,7 @@ public class Enemy : MonoBehaviour
         if (isReadyToAttack)
         {
             targetDistance = Vector3.Distance(transform.position, target.transform.position);
-            if (targetDistance <= attackRange) Attack();
+            if (targetDistance <= attackRange) PlayAttack();
         }
     }
 
@@ -67,13 +73,28 @@ public class Enemy : MonoBehaviour
         agent.SetDestination(target.transform.position);
     }
 
-    async void Attack()
+    void PlayAttack()
     {
         Debug.Log("Attack");
         animator.SetTrigger("Attack");
-        Debug.Log("IsTransiction: "+animator.IsInTransition(0));
-
-        targetHealth.TakeDamage(attackDamage);
         isReadyToAttack = false;
+    }
+
+    [UsedImplicitly]
+    void DamageTarget()
+    {
+        targetHealth.TakeDamage(attackDamage);
+    }
+
+    [UsedImplicitly]
+    void PlayAttackSound()
+    {
+        gameObject.CreateAudioEvent(attackAudioEvent);
+    }
+
+    void PlayBreatheSound()
+    {
+        if (Random.value > playBreatheChance) return;
+        gameObject.CreateAudioEvent(breatheAudioEvent);
     }
 }

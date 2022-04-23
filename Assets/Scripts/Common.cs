@@ -5,6 +5,15 @@ using Object = UnityEngine.Object;
 
 public static class Extensions
 {
+    public static GameObject CreateAudioEvent(this GameObject gameObject, AudioEvent audioEvent)
+    {
+        var newAudioEvent = new GameObject("AudioEvent");
+        newAudioEvent.transform.SetParent(gameObject.transform);
+        var autoDestroy = newAudioEvent.AddComponent<DestroyAfterPlay>();
+        autoDestroy.audioEvent = audioEvent;
+        return newAudioEvent;
+    }
+    
     public static T GetComponentOrNull<T>(this GameObject gameObject) where  T : Component
     {
         return gameObject.IsComponentExist<T>() ? gameObject.GetComponent<T>() : null;
