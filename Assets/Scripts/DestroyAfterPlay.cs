@@ -22,7 +22,7 @@ public class DestroyAfterPlay : MonoBehaviour
     void Update()
     {
         if (isReadyToPlay) return;
-        
+
         if (timer < startDelay)
         {
             timer += Time.deltaTime;
@@ -34,16 +34,17 @@ public class DestroyAfterPlay : MonoBehaviour
             audioEvent.Play(audioSource);
             DestroyOnPlayEnd();
         }
-        
+
         isReadyToPlay = true;
     }
 
     async void DestroyOnPlayEnd()
     {
-        while (audioEvent.audioSource.isPlaying)
+        while (this != null && audioSource != null && audioEvent.audioSource.isPlaying)
         {
             await Task.Yield();
         }
-        Destroy(gameObject);
-    } 
+
+        if (this != null) Destroy(this);
+    }
 }
