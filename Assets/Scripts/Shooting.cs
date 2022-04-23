@@ -10,68 +10,56 @@ public class Shooting : MonoBehaviour
     public FP_Input playerInput;
 
     public float shootRate = 0.15F;
-    public float reloadTime = 1.0F;
-    public int ammoCount = 9999999;
+    //public float reloadTime = 1.0F;
+    // public int ammoCount = 9999999;
 
     public GameObject shellPrefab;
 
-    private int ammo;
-    private float delay;
+    // private int ammo;
+    private float timer;
     private bool reloading;
     private Shell shell;
 
     void Start()
     {
-        ammo = ammoCount;
-        
         if (shellPrefab.IsComponentExist<Shell>())
             shell = shellPrefab.GetComponent<Shell>();
-        else 
+        else
             throw new NullReferenceException("Shell component is missing on ShellPrefab.");
     }
 
     void Update()
     {
-        if (playerInput.Shoot()) //IF SHOOT BUTTON IS PRESSED (Replace your mouse input)
-            if (Time.time > delay)
-                ShootComand();
-
-        if (playerInput.Reload()) //IF RELOAD BUTTON WAS PRESSED (Replace your keyboard input)
-            if (!reloading && ammoCount < ammo)
-                StartCoroutine("Reload");
-    }
-
-    void ShootComand()
-    {
-        if (ammoCount > 0)
+        if (timer > 0f)
         {
-            Shoot();
-            ammoCount--;
+            timer -= Time.deltaTime;
         }
         else
-            Debug.Log("Empty");
+        {
+            if (!playerInput.Shoot()) return; //IF SHOOT BUTTON IS PRESSED (Replace your mouse input)
+            Shoot();
+            timer = shootRate;
+        }
 
-        delay = Time.time + shootRate;
+        // if (playerInput.Reload()) //IF RELOAD BUTTON WAS PRESSED (Replace your keyboard input)
+        //     if (!reloading && ammoCount < ammo)
+        //         StartCoroutine("Reload");
     }
+    
 
-    IEnumerator Reload()
-    {
-        reloading = true;
-        Debug.Log("Reloading");
-        yield return new WaitForSeconds(reloadTime);
-        ammoCount = ammo;
-        Debug.Log("Reloading Complete");
-        reloading = false;
-    }
-
-    void OnGUI()
-    {
-        GUILayout.Label("AMMO: " + ammoCount);
-    }
+    // IEnumerator Reload()
+    // {
+    //     reloading = true;
+    //     Debug.Log("Reloading");
+    //     yield return new WaitForSeconds(reloadTime);
+    //     ammoCount = ammo;
+    //     Debug.Log("Reloading Complete");
+    //     reloading = false;
+    // }
 
     void Shoot()
     {
         var newShell = Instantiate(shellPrefab, transform.position, transform.rotation);
-        newShell.GetComponentOrNull<MeshRenderer>().material =  GameController.Instance.LastColor.material;
+        newShell.GetComponentOrNull<MeshRenderer>().material = GameController.Instance.LastColor.material;
     }
 }
