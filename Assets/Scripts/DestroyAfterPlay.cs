@@ -11,7 +11,7 @@ public class DestroyAfterPlay : MonoBehaviour
     [SerializeField] public float startDelay;
 
     private float timer;
-    private bool isReadyToPlay;
+    private bool isPlaying;
     private AudioSource audioSource;
 
     private void Start()
@@ -21,7 +21,11 @@ public class DestroyAfterPlay : MonoBehaviour
 
     void Update()
     {
-        if (isReadyToPlay) return;
+        if (isPlaying)
+        {
+            if (!audioEvent.audioSource.isPlaying) Destroy(gameObject);
+            return;
+        }
 
         if (timer < startDelay)
         {
@@ -29,22 +33,7 @@ public class DestroyAfterPlay : MonoBehaviour
             return;
         }
 
-        if (!isReadyToPlay)
-        {
-            audioEvent.Play(audioSource);
-            DestroyOnPlayEnd();
-        }
-
-        isReadyToPlay = true;
-    }
-
-    async void DestroyOnPlayEnd()
-    {
-        while (audioEvent.audioSource.isPlaying)
-        {
-            await Task.Yield();
-        }
-
-        if (gameObject != null) Destroy(gameObject);
+        audioEvent.Play(audioSource);
+        isPlaying = true;
     }
 }

@@ -95,6 +95,6 @@ public class Enemy : MonoBehaviour
     void PlayBreatheSound()
     {
         if (Random.value > playBreatheChance) return;
-        gameObject.CreateAudioEvent(breatheAudioEvent);
+        gameObject.CreateAudioEvent(breatheAudioEvent, false);
     }
 }
