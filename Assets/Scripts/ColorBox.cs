@@ -24,7 +24,8 @@ public class ColorBox : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            GameController.Instance.AddScores(currentColor, 1);
+            if (currentColor != null) 
+                GameController.Instance.AddScores(currentColor, 1);
             Destroy(gameObject);
         }
     }

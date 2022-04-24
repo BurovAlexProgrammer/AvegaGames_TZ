@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -55,10 +56,10 @@ public class GameController : MonoBehaviour
     private async void GameOver()
     {
         Debug.Log("GameOver");
+        playerGO.CreateAudioEvent(gameOverAudio);
         var timer = 0f;
         var gameOverDelay = 1.5f;
         isGameOver = true;
-        playerGO.CreateAudioEvent(gameOverAudio);
         while (isGameOver)
         {
             await Task.Yield();
@@ -73,7 +74,6 @@ public class GameController : MonoBehaviour
 
     private void Restart()
     {
-        //TODO GameOver and scene reset
         playerGO.transform.SetPositionAndRotation(initialPlayerPosition, Quaternion.identity);
         playerGO.GetComponent<FP_CameraLook>().PlayerHead.rotation = Quaternion.identity;
         playerHealth.Restore();
@@ -110,5 +110,11 @@ public class GameController : MonoBehaviour
         {
             Scores.Add(color.name, 0);
         }
+    }
+
+    public void SwitchMusic(bool isOn)
+    {
+        isPlayMusic = isOn;
+        GameObject.Find("MusicToggleCross").GetComponentOrNull<TextMeshProUGUI>().SetText(isOn ? "" : "  I");
     }
 }

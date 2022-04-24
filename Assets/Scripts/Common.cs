@@ -32,25 +32,6 @@ public static class Extensions
         return gameObject.IsComponentExist<T>() ? gameObject.GetComponent<T>() : null;
     }
 
-    public static void CheckExisting<T>(this GameObject gameObject) where T : Component
-    {
-        if (!gameObject.IsComponentExist<T>())
-            throw new Exception($"{typeof(T).Name} is null.");
-    }
-
-    public static void Replace(this GameObject T, GameObject prefab)
-    {
-        var newGameObject = (GameObject) PrefabUtility.InstantiatePrefab(prefab);
-        newGameObject.transform.parent = T.transform.parent;
-        newGameObject.transform.position = T.transform.position;
-        newGameObject.transform.rotation = T.transform.rotation;
-        newGameObject.transform.localScale = T.transform.localScale;
-        newGameObject.transform.name = T.transform.name;
-        newGameObject.transform.tag = T.transform.tag;
-        newGameObject.layer = T.layer;
-        Object.Destroy(T);
-    }
-
     public static bool IsComponentExist<T>(this GameObject gameObject) where T : Object
     {
         return gameObject.TryGetComponent(out T component);
