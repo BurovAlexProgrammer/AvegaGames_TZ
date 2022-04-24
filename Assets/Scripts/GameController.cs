@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
     [SerializeField] public GameObject musicPlayer;
     [SerializeField] public GameColors gameColors;
     [SerializeField] public AudioEvent startGameAudio;
+    [SerializeField] public AudioEvent gameOverAudio;
 
     public GameColor LastColor => lastColor;
     private GameColor lastColor;
@@ -41,7 +42,7 @@ public class GameController : MonoBehaviour
     {
         initialPlayerPosition = playerGO.transform.position;
         playerHealth = playerGO.GetComponentOrNull<Health>();
-        gameObject.CreateAudioEvent(startGameAudio);
+        playerGO.CreateAudioEvent(startGameAudio);
     }
 
     private void Update()
@@ -57,6 +58,7 @@ public class GameController : MonoBehaviour
         var timer = 0f;
         var gameOverDelay = 1.5f;
         isGameOver = true;
+        playerGO.CreateAudioEvent(gameOverAudio);
         while (isGameOver)
         {
             await Task.Yield();

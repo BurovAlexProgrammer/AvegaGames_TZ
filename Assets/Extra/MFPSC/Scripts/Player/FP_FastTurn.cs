@@ -6,7 +6,7 @@ public class FP_FastTurn : MonoBehaviour
 {
     public float turnSpeed = 5.5F;
     public float turnAngle = 180;
-    public Button leftTurn, rightTurn;
+    public Button rightTurn;
     private Transform thisT;
     public static bool turn;
     private Quaternion targetRotation;
@@ -14,7 +14,7 @@ public class FP_FastTurn : MonoBehaviour
 	void Start () 
     {
         thisT = transform;
-        leftTurn.onClick.AddListener(LeftTurn);
+        //leftTurn.onClick.AddListener(LeftTurn);
         rightTurn.onClick.AddListener(RightTurn);
 	}
 	

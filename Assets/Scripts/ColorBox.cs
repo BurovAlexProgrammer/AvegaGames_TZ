@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 public class ColorBox : MonoBehaviour
 {
     [SerializeField] public GameColors gameColors;
+    [SerializeField] public AudioEvent gettingAudio;
 
     public GameColor CurrentColor => currentColor;
     private GameColor currentColor;
@@ -26,5 +27,11 @@ public class ColorBox : MonoBehaviour
             GameController.Instance.AddScores(currentColor, 1);
             Destroy(gameObject);
         }
+    }
+
+    private void OnDestroy()
+    {
+        
+        gameObject.CreateAudioEvent(gettingAudio);
     }
 }
